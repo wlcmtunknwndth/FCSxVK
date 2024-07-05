@@ -1,4 +1,3 @@
-################################################################################
 ARG GO_VERSION=1.22
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
 WORKDIR /src
@@ -14,7 +13,6 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,target=. \
     CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/server ./cmd/server
 
-################################################################################
 FROM alpine:latest AS final
 
 RUN --mount=type=cache,target=/var/cache/apk \
@@ -24,19 +22,14 @@ RUN --mount=type=cache,target=/var/cache/apk \
         && \
         update-ca-certificates
 
+RUN mkdir /bin/server
+RUN mkdir /bin/server/static
+
 ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-USER appuser
+USER root
 
-COPY --from=build /bin/server /bin/
+COPY --from=build /bin/server /bin/server/
+COPY ./config/config.yaml /bin/server/
+#EXPOSE 7777
 
-EXPOSE 8888
-
-ENTRYPOINT [ "/bin/server" ]
+ENTRYPOINT [ "/bin/server/server" ]

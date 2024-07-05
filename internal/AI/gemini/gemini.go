@@ -83,7 +83,7 @@ func (g *Gemini) HandleTextAndImagePrompt(ctx context.Context, filePath, msgProm
 
 	prompt := []genai.Part{
 		//genai.ImageData(split[len(split)-1], data),
-		genai.ImageData("jpg", file),
+		genai.ImageData(split[len(split)-1], file),
 		genai.Text(msgPrompt),
 	}
 

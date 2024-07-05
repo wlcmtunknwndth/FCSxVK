@@ -4,5 +4,13 @@ services:
     build:
       context: .
       target: final
+    environment:
+      - config_path=/bin/server/config.yaml
     ports:
       - 8888:8888
+    volumes:
+      - static:/bin/server/static
+
+volumes:
+  static:
+    driver: local

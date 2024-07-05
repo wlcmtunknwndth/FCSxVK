@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"flag"
 	"github.com/wlcmtunknwndth/FCSxVK/internal/AI/gemini"
+	"github.com/wlcmtunknwndth/FCSxVK/internal/config"
 	"github.com/wlcmtunknwndth/FCSxVK/internal/telegram"
 	"github.com/wlcmtunknwndth/FCSxVK/lib/sl"
 	"log/slog"
@@ -25,37 +25,39 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
-	var botToken string
-	flag.StringVar(&botToken, "token", "", "bot token")
+	//var botToken string
+	//flag.StringVar(&botToken, "token", "", "bot token")
+	//
+	//var programEnv string
+	//flag.StringVar(&programEnv, "env", "local", "run environment")
+	//
+	//var aiToken string
+	//flag.StringVar(&aiToken, "ai_token", "", "AI api token")
+	//
+	//var proxyUrl string
+	//flag.StringVar(&proxyUrl, "proxy", "", "proxy server url")
+	//
+	//var username string
+	//flag.StringVar(&username, "user", "", "proxy username")
+	//
+	//var password string
+	//flag.StringVar(&password, "pass", "", "proxy password")
+	//
+	//var staticPath string
+	//flag.StringVar(&staticPath, "static", "", "route to file storage")
+	//flag.Parse()
 
-	var programEnv string
-	flag.StringVar(&programEnv, "env", "local", "run environment")
+	cfg := config.MustLoad()
 
-	var aiToken string
-	flag.StringVar(&aiToken, "ai_token", "", "AI api token")
+	log := setupLogger(cfg.Env)
 
-	var proxyUrl string
-	flag.StringVar(&proxyUrl, "proxy", "", "proxy server url")
-
-	var username string
-	flag.StringVar(&username, "user", "", "proxy username")
-
-	var password string
-	flag.StringVar(&password, "pass", "", "proxy password")
-
-	var staticPath string
-	flag.StringVar(&staticPath, "static", "", "route to file storage")
-	flag.Parse()
-
-	log := setupLogger(programEnv)
-
-	ai, err := gemini.New(ctx, aiToken, proxyUrl, username, password)
+	ai, err := gemini.New(ctx, cfg.AiToken, cfg.Proxy.Addr, cfg.Proxy.Username, cfg.Proxy.Password)
 	if err != nil {
 		log.Error("couldn't connect to gemini api", sl.Op(scope), sl.Err(err))
 		return
 	}
 
-	bot, err := telegram.New(botToken, log, ai, staticPath)
+	bot, err := telegram.New(cfg.TgToken, log, ai, cfg.StaticPath)
 	if err != nil {
 		log.Error("couldn't create telegram bot instance", sl.Op(scope), sl.Err(err))
 		return
@@ -72,13 +74,6 @@ func main() {
 		log.Error("couldn't close bot", sl.Op(scope), sl.Err(err))
 		return
 	}
-	//resp, err := ai.HandleTextPrompt(ctx, "hello, gemini. What can you do?")
-	//if err != nil {
-	//	slog.Error("couldn't handle prompt", sl.Op(scope), sl.Err(err))
-	//	return
-	//}
-
-	//log.Info("got:", slog.Any("resp", resp), slog.Int("len", len(resp)))
 
 	return
 }

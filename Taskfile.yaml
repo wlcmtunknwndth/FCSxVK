@@ -1,0 +1,31 @@
+version: 3
+
+tasks:
+  test:
+    aliases:
+      - test_bot
+    desc: "start testing run"
+    cmds: # Add needed flags(check main func for more info)
+      - go run ./cmd/server/main.go -token <Tg bot token> -env local -ai_token <TokenForAPI> -proxy http://1.1.1.1:8888 -user usern -pass passw -static path/to/static/dir
+
+  run:
+    aliases:
+      - run
+    desc: "run container"
+    cmds:
+      - docker compose up
+
+  delete:
+    aliases:
+      - del
+    desc: "delete container and all the stuff"
+    cmds:
+      - docker compose down
+      - docker rmi fcsxvk-server
+      - docker volume rm fcsxvk_static
+
+  clean:
+    desc: "turn of containers and delete image"
+    cmds:
+      - docker compose down
+      - docker rmi fcsxvk-server
