@@ -30,6 +30,6 @@ USER root
 
 COPY --from=build /bin/server /bin/server/
 COPY ./config/config.yaml /bin/server/
-#EXPOSE 7777
+EXPOSE 7777
 
 ENTRYPOINT [ "/bin/server/server" ]

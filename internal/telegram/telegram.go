@@ -58,6 +58,10 @@ func New(token string, log *slog.Logger, client AI, static string) (*Telegram, e
 }
 
 func matchCaption(update *models.Update) bool {
+	if len(update.Message.Caption) < len(imageAndTextResp) {
+		return false
+	}
+
 	if update.Message.Caption[:len(imageAndTextResp)] == imageAndTextResp {
 		return true
 	}
@@ -118,6 +122,9 @@ func (t *Telegram) imageAndTextHandler(ctx context.Context, b *bot.Bot, update *
 		return
 	}
 
+	if len(update.Message.Caption) <= len(imageAndTextResp)+1 {
+		return
+	}
 	msg, err := t.ai.HandleTextAndImagePrompt(ctx, path, update.Message.Caption[len(imageAndTextResp)-1:])
 	if err != nil {
 		t.log.Error("couldn't get response", sl.Op(op), sl.Err(err))
@@ -136,6 +143,9 @@ func (t *Telegram) textHandler(ctx context.Context, b *bot.Bot, update *models.U
 
 	var resp string
 	var err error
+	if len(update.Message.Text) <= len(textOnlyResp)+1 {
+		return
+	}
 	cleanPrompt := update.Message.Text[len(textOnlyResp)-1:]
 	if update.Message != nil && update.Message.Text != "" {
 		resp, err = t.ai.HandleTextPrompt(ctx, cleanPrompt)

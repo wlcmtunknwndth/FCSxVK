@@ -7,6 +7,7 @@ services:
     environment:
       - config_path=/bin/server/config.yaml
     ports:
+      - 7777:7777
       - 8888:8888
     volumes:
       - static:/bin/server/static
