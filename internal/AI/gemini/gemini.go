@@ -9,6 +9,7 @@ import (
 	"github.com/wlcmtunknwndth/FCSxVK/internal/proxy"
 	"google.golang.org/api/option"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -45,8 +46,8 @@ func New(ctx context.Context, apiKey, proxyUrl, username, password string) (*Gem
 	}, nil
 }
 
-func (g *Gemini) HandlePrompt(ctx context.Context, msg string) (string, error) {
-	const op = scope + "HandlePrompt"
+func (g *Gemini) HandleTextPrompt(ctx context.Context, msg string) (string, error) {
+	const op = scope + "HandleTextPrompt"
 
 	resp, err := g.model.GenerateContent(ctx, genai.Text(msg))
 	if err != nil {
@@ -59,6 +60,44 @@ func (g *Gemini) HandlePrompt(ctx context.Context, msg string) (string, error) {
 	}
 
 	return txt, nil
+}
+
+func (g *Gemini) HandleTextAndImagePrompt(ctx context.Context, filePath, msgPrompt string) (string, error) {
+	const op = scope + "HandleTextAndImagePrompt"
+
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", fmt.Errorf("%s: %w", op, err)
+	}
+
+	split := strings.Split(filePath, ".")
+	if len(split) < 2 {
+		return "", errors.New(op + ": not supported extension" + filePath)
+	}
+
+	//var data []byte
+	//_, err := file.Read(data)
+	//if err != nil && !errors.Is(err, io.EOF) {
+	//	return "", fmt.Errorf("%s: %w", op, err)
+	//}
+
+	prompt := []genai.Part{
+		//genai.ImageData(split[len(split)-1], data),
+		genai.ImageData("jpg", file),
+		genai.Text(msgPrompt),
+	}
+
+	resp, err := g.model.GenerateContent(ctx, prompt...)
+	if err != nil {
+		return "", fmt.Errorf("%s: %w", op, err)
+	}
+
+	msg, err := retrieveText(resp)
+	if err != nil {
+		return "", fmt.Errorf("%s: %w", op, err)
+	}
+
+	return msg, nil
 }
 
 type Content struct {
@@ -79,7 +118,6 @@ func retrieveText(resp *genai.GenerateContentResponse) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", op, err)
 	}
-
 	var generateResponse ContentResponse
 	if err = json.Unmarshal(marshalResponse, &generateResponse); err != nil {
 		return "", fmt.Errorf("%s: %w", op, err)

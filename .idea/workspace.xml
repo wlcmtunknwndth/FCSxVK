@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4569f9c-ca93-47a6-9676-b02122a774af" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/get/getFile.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/AQADJ-MxGyGPOUh4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/AQADLuMxGyGPOUh4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/AQADV-MxGyGPOUh4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/AQADW-MxGyGPOUh4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/AQADXOMxGyGPOUh4.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/AI/gemini/gemini.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/AI/gemini/gemini.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/telegram/telegram.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/telegram/telegram.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

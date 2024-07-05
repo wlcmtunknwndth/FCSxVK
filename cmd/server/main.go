@@ -43,6 +43,8 @@ func main() {
 	var password string
 	flag.StringVar(&password, "pass", "", "proxy password")
 
+	var staticPath string
+	flag.StringVar(&staticPath, "static", "", "route to file storage")
 	flag.Parse()
 
 	log := setupLogger(programEnv)
@@ -53,7 +55,7 @@ func main() {
 		return
 	}
 
-	bot, err := telegram.New(botToken, log, ai)
+	bot, err := telegram.New(botToken, log, ai, staticPath)
 	if err != nil {
 		log.Error("couldn't create telegram bot instance", sl.Op(scope), sl.Err(err))
 		return
@@ -70,7 +72,7 @@ func main() {
 		log.Error("couldn't close bot", sl.Op(scope), sl.Err(err))
 		return
 	}
-	//resp, err := ai.HandlePrompt(ctx, "hello, gemini. What can you do?")
+	//resp, err := ai.HandleTextPrompt(ctx, "hello, gemini. What can you do?")
 	//if err != nil {
 	//	slog.Error("couldn't handle prompt", sl.Op(scope), sl.Err(err))
 	//	return
